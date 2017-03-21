@@ -1,0 +1,12 @@
+//comment 
+
+struct {
+	int a = 1; 
+	int b = 3; 
+	char = 'a'; 
+	string b = "hola_mundo";
+	double c = 2.2;
+}
+void main (){
+	return 0; 
+}

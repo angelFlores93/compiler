@@ -1,0 +1,45 @@
+
+
+
+//Flow Control Words
+
+//Input/output
+
+//Rest of tokens
+main 
+return
+==
+!=
+<=
+>=
+&&
+||
+!
+<
+>
++
+-
+*
+/
+%
+;
+,
+.
+=
+(
+)
+{
+}
+'
+^
+[
+]
+//Wrong definition 
+asdf_d int
+if (int asdf)
+//Wrong place
+if ("a =0" = 0)
+string asdf = 0;
+while (0 >= asdf)
+//While statement using wrong grammar
+while("asdf" == 9d)

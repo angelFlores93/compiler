@@ -1,0 +1,5 @@
+//comment 
+string b = "hola_mundo";
+void main (){
+	return 0; 
+}

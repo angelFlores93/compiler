@@ -1,0 +1,24 @@
+int a = 0; 
+int b = 1; 
+
+void main (){
+	while (string a = "asdf";){
+		out hola;
+	}
+	string c = "asdf";
+	if (string a != 0){
+		if (b == 1 || !a ){
+			a = a + b;
+			b = b - a;
+		}
+	}else{
+		if (c <= 0 && a >= 0){
+			a = a * b; 
+			b = b / a;
+		}else{
+
+		}
+	}
+	b int = f();
+	out(b);
+}

@@ -1,0 +1,21 @@
+int a = 0; 
+int b = 1; 
+
+void main (){
+	string c = "asdf";
+	if (string a != 0){
+		if (b == 1 || !a ){
+			a = a + b;
+			b = b - a;
+		}
+	}else{
+		if (c <= 0 && a >= 0){
+			a = a * b; 
+			b = b / a;
+		}else{
+
+		}
+	}
+	b int = f();
+	out(b);
+}

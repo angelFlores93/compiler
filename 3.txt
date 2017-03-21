@@ -1,0 +1,7 @@
+//comment 
+int a; 
+int b; 
+
+void main (){
+	return 0; 
+}

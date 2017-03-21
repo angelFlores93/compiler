@@ -1,0 +1,6 @@
+//Declaration of variables
+
+
+void main (){
+	return 0; 
+}
