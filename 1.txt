@@ -5,13 +5,14 @@ int y;
 int z; 
 }t;
 int asdf (int a, int b){
-	int c; 
-	return 0; 
+	int c;
+	int d; 
+	return a + b; 
 }
 void main (){
-	0 = 0; 
+	a = 0;  
 	b = 1;
-	x = 1; 
+	
 	if (a != 0){
 		int w;
 		if (a == 1){
@@ -26,8 +27,9 @@ void main (){
 			 
 		}
 	}
-	w = 0;
+	asdf = 0;
 	out b;
 	t.y = 1;
 	t.z = 1; 
+	t = 1; 
 }

@@ -6,12 +6,20 @@ import visitor.Visitor;
 
 public class CallParameter extends AbstractASTNode{
 	private List<Expression> parameters; 
-	
+	private Type type; 
 	public CallParameter (int column, int line, List<Expression> parameters){
 		super(column, line);
 		this.parameters = parameters; 
 	}
 	
+	public Type getType() {
+		return type;
+	}
+
+	public void setType(Type type) {
+		this.type = type;
+	}
+
 	public List<Expression> getParameters() {
 		return parameters;
 	}

@@ -37,6 +37,7 @@ public abstract class AbstractVisitor implements Visitor {
 			for(Instruction inst : function.getInstructions()){
 				inst.accept(this, null);
 			}
+		function.getReturnStm().accept(this, param);
 		return null;
 	}
 

@@ -41,6 +41,7 @@ public class TypeNormal extends AbstractType{
 	}
 	@Override
 	public boolean isLogical(){
+		if (getType() == null) return false; 
 		if (getType().compareTo("int") == 0) return true;
 		else return false;
 	}
@@ -48,13 +49,9 @@ public class TypeNormal extends AbstractType{
 	public boolean isBasico (){
 		return true;
 	}
-	/*@Override
-	public Type aritmetical(){
-		
-	}*/
 	@Override
 	public Type aritmetical(Type type){
-		if (type != null){
+		if (type != null && getType() != null){
 			if (getType().compareTo(((TypeNormal) type).getType()) == 0)
 				return this;
 			if (getType().compareTo("int") == 0 && ((TypeNormal) type).getType().compareTo("char") == 0)
@@ -64,27 +61,32 @@ public class TypeNormal extends AbstractType{
 			if (getType().compareTo("char") == 0 && ((TypeNormal) type).getType().compareTo("int") == 0)
 				return type;
 		}
-		return new TypeError(0, 0, "Caused by: variable not defined");
+		return null;
 	}
 	@Override 
 	public Type comparacion(Type type){
-		if (getType().compareTo( ((TypeNormal)type).getType()) == 0)
-			if (getType().compareTo("int") == 0)
-				return this;
-		return new TypeError(0, 0, "");
+		if (getType() != null && type != null)
+			if (getType().compareTo( ((TypeNormal)type).getType()) == 0)
+				if (getType().compareTo("int") == 0)
+					return this;
+		return null;
 	}
 	@Override 
 	public Type logical(){
-		if (getType().compareTo("int") == 0)
-			return this;
-		return new TypeError(0, 0, "");
+		if (getType() != null)
+			if (getType().compareTo("int") == 0)
+				return this;
+		return null;
 	}
 	@Override 
 	public Type logical (Type type){
-		return comparacion(type);
+		if (getType() != null && type != null)
+			return comparacion(type);
+		return null;
 	}
 	@Override
 	public Type castTo(Type type){
+		if (getType() == null || type == null) return null;
 		if (getType().compareTo(((TypeNormal) type).getType()) == 0)
 			return this;
 		if (getType().compareTo("int") == 0 && ((TypeNormal) type).getType().compareTo("char") == 0)
@@ -93,7 +95,7 @@ public class TypeNormal extends AbstractType{
 			return this;
 		if (getType().compareTo("char") == 0 && ((TypeNormal) type).getType().compareTo("int") == 0)
 			return this;
-		return new TypeError(0, 0, "");
+		return null;
 	}
 	@Override
 	public Type invocation(){
@@ -101,6 +103,7 @@ public class TypeNormal extends AbstractType{
 	}
 	@Override
 	public Type promotionTo(Type type){
+		if (getType() == null || type == null) return null;
 		if (getType().compareTo(((TypeNormal) type).getType()) == 0)
 			return this;
 		if (getType().compareTo("int") == 0 && ((TypeNormal) type).getType().compareTo("char") == 0)
@@ -109,6 +112,6 @@ public class TypeNormal extends AbstractType{
 			return this;
 		if (getType().compareTo("char") == 0 && ((TypeNormal) type).getType().compareTo("int") == 0)
 			return this;
-		return new TypeError(0, 0, "");
+		return null;
 	}
 }

@@ -7,11 +7,20 @@ import visitor.Visitor;
 public class InstructionFunctionCall extends AbstractASTNode implements Instruction {
 	private Expression expression; 
 	private List<RegularExpression> parameters; 
+	private Type type; 
 	public InstructionFunctionCall(int column, int line, Expression expression, List<RegularExpression> parameters) {
 		super(column, line);
 		this.expression = expression; 
 		this.parameters = parameters; 
 		// TODO Auto-generated constructor stub
+	}
+	
+	public Type getType() {
+		return type;
+	}
+
+	public void setType(Type type) {
+		this.type = type;
 	}
 
 	public Expression getExpression() {

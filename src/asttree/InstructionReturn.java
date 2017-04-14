@@ -4,10 +4,19 @@ import visitor.Visitor;
 
 public class InstructionReturn extends AbstractASTNode implements Instruction {
 	private Expression expression; 
+	private Type type; 
 	public InstructionReturn(int column, int line, Expression expression) {
 		super(column, line);
 		this.expression = expression; 
 		// TODO Auto-generated constructor stub
+	}
+
+	public Type getType() {
+		return type;
+	}
+
+	public void setType(Type type) {
+		this.type = type;
 	}
 
 	public Expression getExpression() {

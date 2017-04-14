@@ -15,6 +15,7 @@ import asttree.RegularExpressionReal;
 import asttree.RegularExpressionStructRef;
 import asttree.RegularExpressionVariable;
 import asttree.TypeError;
+import asttree.TypeNormal;
 
 public class VisitorLValue extends AbstractVisitor{
 	private List<TypeError> errorList;
@@ -84,7 +85,14 @@ public class VisitorLValue extends AbstractVisitor{
 
 	@Override
 	public Object visit(RegularExpressionVariable regularExpressionVariable, Object param) {
-		regularExpressionVariable.setLvalue(true);
+		
+		if (regularExpressionVariable.getType() instanceof TypeNormal)
+			regularExpressionVariable.setLvalue(true);
+		else{
+			regularExpressionVariable.setLvalue(false);
+		}
+		
+		
 		return null;
 	}
 

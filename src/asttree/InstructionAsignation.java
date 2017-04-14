@@ -6,7 +6,7 @@ public class InstructionAsignation extends AbstractASTNode implements Instructio
 
 	private Expression left;
 	private Expression right;
-	
+	 
 	public InstructionAsignation(int column, int line, Expression left, Expression right) {
 		super (column, line);
 		this.left = left; 

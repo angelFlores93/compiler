@@ -49,6 +49,8 @@ public class Main
 			System.err.println("__________________Calling Identifier Visitor_________________");
 			List<TypeError> errors = new ArrayList<TypeError>();
 			sintactico.ast.accept(new VisitorIdentifier(errors),null);
+			System.err.println("__________________Calling TypeCheck Visitor_________________");
+			sintactico.ast.accept(new VisitorTypeCheck(errors), null);
 			System.err.println("__________________Calling LValue Visitor_________________");
 			sintactico.ast.accept(new VisitorLValue(errors), null);
 			for (TypeError error : errors){

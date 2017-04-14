@@ -8,25 +8,37 @@ public class Function extends AbstractASTNode implements Instruction{
 	private InstructionDefinition definition;
 	private List<InstructionDefinition> definitions; 
 	private List<Instruction> instructions; 
-	
+	private InstructionReturn returnStm;
+	private Type type; 
 	public Function(int column, int line, 
 			InstructionDefinition definition, List<InstructionDefinition> definitions,
-			List<Instruction> instructions) {
+			List<Instruction> instructions, InstructionReturn returnStm) {
 		super(column, line); 
 		this.definitions = definitions;
 		this.definition = definition; 
 		this.instructions = instructions; 
+		this.returnStm = returnStm;
 		
 		// TODO Auto-generated constructor stub
 	}
 
+	public Type getType() {
+		return type;
+	}
 
+	public void setType(Type type) {
+		this.type = type;
+	}
+
+	public InstructionReturn getReturnStm(){
+		return returnStm;
+	}
+	public void setReturnStm(InstructionReturn returnStm){
+		this.returnStm = returnStm;
+	}
 	public InstructionDefinition getDefinition() {
 		return definition;
 	}
-
-
-
 	public void setDefinition(InstructionDefinition definition) {
 		this.definition = definition;
 	}

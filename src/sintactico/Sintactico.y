@@ -214,12 +214,18 @@ functions:
   }
 ;
 function: 
-  type ID '(' parametersFunction ')' '{' instructions '}'           {System.out.println("Reducing function");
-  $$ = new Function (lexico.getColumn(), lexico.getLine(), new InstructionDefinition (lexico.getColumn(), lexico.getLine(), (TypeNormal)$1, new RegularExpressionVariable(lexico.getColumn(), lexico.getLine(), (String)$2)), (List<InstructionDefinition>) $4, (List<Instruction>)$7);
+  type ID '(' parametersFunction ')' '{' instructions returnStm'}'           {System.out.println("Reducing function");
+  $$ = new Function (lexico.getColumn(), lexico.getLine(), new InstructionDefinition (lexico.getColumn(), lexico.getLine(), (TypeNormal)$1, new RegularExpressionVariable(lexico.getColumn(), lexico.getLine(), (String)$2)), (List<InstructionDefinition>) $4, (List<Instruction>)$7, (InstructionReturn) $8);
   } 
   
   
   
+;
+returnStm:
+   RETURN exp ';' {
+     System.out.println("Reducing Return exp");
+     $$ = new InstructionReturn(lexico.getColumn(), lexico.getLine(), (Expression)$2);
+   }
 ;
 
 instructions:
@@ -272,10 +278,6 @@ instruction:
   }
   | IF expCompare  spetialStatement ELSE spetialStatement                     {System.out.println("Reducing IF/ELSE");
   $$ = new InstructionIf(lexico.getColumn(), lexico.getLine(), (BinaryExpression)$2, (List<Instruction>)$3, (List<Instruction>)$5);  
-  }
-  
-  | RETURN exp ';'                                                  {System.out.println("Reducing RETURN ");
-  $$ = new InstructionReturn(lexico.getColumn(), lexico.getLine(), (Expression)$2);
   }
 ;
 
