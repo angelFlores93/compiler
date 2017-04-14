@@ -10,6 +10,10 @@ import lexico.Lexico;
 // ===================
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import asttree.TypeError;
 
 public class Main 
 {
@@ -40,12 +44,23 @@ public class Main
 		Sintactico sintactico = new Sintactico(lexico);
 		
 		System.err.println("__________________Running Parser_______________________________");
-		sintactico.run();
-		IntrospectorModel model=new IntrospectorModel("Program", sintactico.ast);
-		new IntrospectorTree("Introspector", model);
-		//System.err.println("__________________Calling PrettyPrint Visitor_________________");
+		try {
+			sintactico.run();
+			System.err.println("__________________Calling Identifier Visitor_________________");
+			List<TypeError> errors = new ArrayList<TypeError>();
+			sintactico.ast.accept(new VisitorIdentifier(errors),null);
+			System.err.println("__________________Calling LValue Visitor_________________");
+			sintactico.ast.accept(new VisitorLValue(errors), null);
+			for (TypeError error : errors){
+				System.err.println(error.getError());
+			}
+			IntrospectorModel model=new IntrospectorModel("Program", sintactico.ast);
+			new IntrospectorTree("Introspector", model);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			
+		}
 		
-		//sintactico.ast.accept(new VisitorIdentifier(),null);
 		
 		//System.err.println("__________________Calling TypeCheck Visitor_________________");
 		

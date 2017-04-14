@@ -1,5 +1,4 @@
 void main (){
 	int a; 
-	in(a);
-	out(a);
+	a = "hello";
 }

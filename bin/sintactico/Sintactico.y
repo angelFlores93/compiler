@@ -17,6 +17,10 @@ import java.util.ArrayList;
 //NULL TEXT
 //---------------------
 %token NULLTEXT
+//---------------------
+//ERROR
+//---------------------
+%token ERROR
 
 //---------------------
 //LOGICAL EXPRESSIONS
@@ -192,7 +196,9 @@ type:
   | CHAR                                                            {System.out.println("Reducing CHAR type");
   $$ = new TypeNormal(lexico.getColumn(), lexico.getLine(), "char");
   }
-
+  | STRING                                                          {System.out.println("Reducing STRING type");
+  $$ = new TypeNormal(lexico.getColumn(), lexico.getLine(), "string");
+  }
   //| VOID                                                            {System.out.println("Reducing VOID type");}
 ;
 functions:
@@ -245,7 +251,7 @@ instruction:
   | INPUT exp ';'                                                    {System.out.println("Reducing INPUT ");
   $$ = new InstructionInput (lexico.getColumn(), lexico.getLine(), (Expression) $2);
   }
-  | PRINT exp ';'                                                    {System.out.println("Reducing INPUT ");
+  | PRINT exp ';'                                                    {System.out.println("Reducing PRINT ");
   $$ = new InstructionPrint (lexico.getColumn(), lexico.getLine(), (Expression) $2);
   }
   | exp '=' exp ';'                                                       {System.out.println("Reducing Equality");
@@ -254,7 +260,7 @@ instruction:
   
   }  
   | ID '(' parameters ')' ';'                                       {System.out.println("Reducing function call");
-  $$ = new InstructionFunctionCall(lexico.getColumn(), lexico.getLine(), new RegularExpressionVariable (lexico.getColumn(), lexico.getLine(), (String)$1), (List<CallParameter>)$3);
+  $$ = new InstructionFunctionCall(lexico.getColumn(), lexico.getLine(), new RegularExpressionVariable (lexico.getColumn(), lexico.getLine(), (String)$1), (List<RegularExpression>)$3);
   }
   | WHILE expCompare spetialStatement                               {System.out.println("Reducing WHILE");
   $$ = new InstructionWhile(lexico.getColumn(), lexico.getLine(), (BinaryExpression) $2, (List<Instruction>)$3);
@@ -277,7 +283,10 @@ spetialStatement:
   '{' instructions '}'   {System.out.println("Reducing multiple Instructions ");
   $$ = (List<Instruction>) $2;
   }
-  | '{' '}'       {System.out.println("Reducing no_instructions ");}
+  | '{' '}'       {System.out.println("Reducing no_instructions ");
+  List<Instruction> inst = new ArrayList<Instruction>();
+  $$ = inst;
+  }
   | instruction   {System.out.println("Reducing single Instructions ");
 
   List<Instruction> inst = new ArrayList<Instruction>();
@@ -312,13 +321,13 @@ parameterFunction:
   }
 ;
 parameters: 
-  /* empty */ {$$ = new ArrayList<RegularExpressionVariable>();}
-  | parameters vars                                                 {System.out.println("Reducing multuple calling-function parameters ");
-  List<RegularExpressionVariable> expressions = (List<RegularExpressionVariable>) $1;
+  /* empty */ {$$ = new ArrayList<RegularExpression>();}
+  | parameters exps                                                 {System.out.println("Reducing multuple calling-function parameters ");
+  List<RegularExpression> expressions = (List<RegularExpression>) $1;
   if ($2 instanceof List)
-    expressions.addAll((List<RegularExpressionVariable>) $2);
+    expressions.addAll((List<RegularExpression>) $2);
   else
-    expressions.add((RegularExpressionVariable) $2);
+    expressions.add((RegularExpression) $2);
   $$ = expressions;
   }
 ;
@@ -331,7 +340,20 @@ expCompare:
   }
  
 ; 
-
+exps: 
+  exp {
+  $$ = (RegularExpression) $1;
+  }
+  | exps ',' exp {
+  List<RegularExpression> list = new ArrayList<RegularExpression>();
+  if($3 instanceof List){
+    list.addAll((List<RegularExpression>) $1);
+  }else{
+    list.add((RegularExpression) $3);
+  }
+  $$ = list;
+  }
+;
 expBin:
   expComp AND expComp                                                     {System.out.println("Reducing AND");
   $$ = new BinaryExpression (lexico.getColumn(), lexico.getLine(), (Expression)$1, (Expression)$3, "&&");
@@ -398,7 +420,7 @@ exp:
   $$ = new CastExpression (lexico.getColumn(), lexico.getLine(), (TypeNormal)$2, (RegularExpression)$4);
   }
   | ID '(' parameters ')'                                           {System.out.println("Reducing function call exp");
-  $$ = new RegularExpressionFunctionRef (lexico.getColumn(), lexico.getLine(), new RegularExpressionVariable (lexico.getColumn(), lexico.getLine(), (String)$1) , (List<Expression>)$3);
+  $$ = new RegularExpressionFunctionRef (lexico.getColumn(), lexico.getLine(), new RegularExpressionVariable (lexico.getColumn(), lexico.getLine(), (String)$1) , (List<RegularExpression>)$3);
   }
   | INTEGER                                                         {System.out.println("Reducing INTEGER value");
   $$ = new RegularExpressionInt(lexico.getColumn(), lexico.getLine(),(int) $1);
@@ -408,6 +430,9 @@ exp:
   $$ = new RegularExpressionReal(lexico.getColumn(), lexico.getLine(),(double) $1);
   }
   | LETTER                                                          {System.out.println("Reducing LETTER value");
+  $$ = new RegularExpressionLetter(lexico.getColumn(), lexico.getLine(),(String) $1);
+  }
+  | STRINGVALUE                                                          {System.out.println("Reducing STRINGVALUE value");
   $$ = new RegularExpressionLetter(lexico.getColumn(), lexico.getLine(),(String) $1);
   }
   | exp '.' ID                                                       {System.out.println("Reducing struct variable ");

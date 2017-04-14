@@ -1,6 +1,11 @@
-//Declaration of variables
-
-
 void main (){
-	return 0; 
+	int a; 
+	a = 1; 
+	while (a < 3){
+		if (a == 2){
+			print(a);
+		}
+		a = a + 1; 
+	}
 }
+// check empty elses

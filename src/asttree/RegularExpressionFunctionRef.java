@@ -6,9 +6,9 @@ import visitor.Visitor;
 
 public class RegularExpressionFunctionRef extends AbstractRegularExpression implements RegularExpression {
 	private Expression expression; 
-	private List <Expression> parameters; 
+	private List <RegularExpression> parameters; 
 	
-	public RegularExpressionFunctionRef(int column, int line, Expression expression, List<Expression> parameters) {
+	public RegularExpressionFunctionRef(int column, int line, Expression expression, List<RegularExpression> parameters) {
 		super(column, line);
 		this.expression = expression;
 		this.parameters = parameters; 
@@ -25,11 +25,11 @@ public class RegularExpressionFunctionRef extends AbstractRegularExpression impl
 		this.expression = expression;
 	}
 
-	public List<Expression> getParameters() {
+	public List<RegularExpression> getParameters() {
 		return parameters;
 	}
 
-	public void setParameters(List<Expression> parameters) {
+	public void setParameters(List<RegularExpression> parameters) {
 		this.parameters = parameters;
 	}
 

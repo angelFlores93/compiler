@@ -1,0 +1,6 @@
+void main (){
+	i int;	
+	while (int i){
+		//do nothing
+	}
+}

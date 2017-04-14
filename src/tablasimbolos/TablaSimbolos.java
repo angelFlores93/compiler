@@ -57,12 +57,13 @@ public class TablaSimbolos {
 	}
 
 	public InstructionDefinition buscarReferenciasLocal(String id) {
-		return buscarAmbitoActual(id);
+		Map <String, InstructionDefinition> map = tabla.get(1);
+		if (map.containsKey(id))
+			return map.get(id);
+		return null;
 	}
 	public InstructionDefinition buscarReferenciasGlobales(String id) {
-		Map <String, InstructionDefinition> map;
-		map = tabla.get(0);
-		
+		Map <String, InstructionDefinition> map = tabla.get(0);
 		if (map.containsKey(id))
 			return map.get(id);
 		return null;
@@ -70,7 +71,7 @@ public class TablaSimbolos {
 	public InstructionDefinition buscar(String id) {
 		int i; 
 		Map<String,InstructionDefinition>map;
-		for (i = 1; i>0; i--){
+		for (i = 1; i>=0; i--){
 			map = simbolos.getTabla().get(i);
 			if (map.containsKey(id))
 				return (InstructionDefinition) map.get(id);
@@ -78,7 +79,7 @@ public class TablaSimbolos {
 		return null;
 	}
 	public InstructionDefinition buscarAmbitoActual(String id) {
-		Map <String, InstructionDefinition> map = tabla.get(1);
+		Map <String, InstructionDefinition> map = tabla.get(getAmbito());
 		if (map.containsKey(id))
 			return map.get(id);
 		return null;
@@ -88,14 +89,14 @@ public class TablaSimbolos {
 		Map <String, InstructionDefinition> defs =  tabla.get(1);
 		
 		for (InstructionDefinition d : defs.values()){
-			System.err.println("Variable: " +((RegularExpressionVariable) d.getName()).getName() );
+			System.err.println("Variable: " +((RegularExpressionVariable) d.getName()).getName() + " type: " +((Type) d.getType()).toString());
 		}
 	}
-	public void print (){
+	public void printGlobal (){
 		System.err.println("Global map size: " + tabla.get(0).size());
 		Map <String, InstructionDefinition> defs =  tabla.get(0);
 		for (InstructionDefinition d : defs.values()){
-			System.err.println("Variable: " +((RegularExpressionVariable) d.getName()).getName() );
+			System.err.println("Variable: " +((RegularExpressionVariable) d.getName()).getName()  + " type: " +((Type) d.getType()).toString());
 		}
 		
 	}

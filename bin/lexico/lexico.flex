@@ -148,4 +148,5 @@ return this.yylval;
 " Column: "+getColumn()+":\n\tCharacter \'"+
 yycharat(0)+"\' unknown.");
 System.err.println("yytext value: " + yytext());
+throw new Throwable(); 
 }

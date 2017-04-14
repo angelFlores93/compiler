@@ -1,6 +1,10 @@
 package visitor;
 
 import tablasimbolos.TablaSimbolos;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import asttree.ArithmeticExpression;
 import asttree.BinaryExpression;
 import asttree.CastExpression;
@@ -17,13 +21,19 @@ import asttree.RegularExpressionMatrixRef;
 import asttree.RegularExpressionReal;
 import asttree.RegularExpressionStructRef;
 import asttree.RegularExpressionVariable;
+import asttree.TypeError;
+import asttree.TypeSpecialStruct;
 
 public class VisitorIdentifier extends AbstractVisitor{
 	private TablaSimbolos simbolos = TablaSimbolos.getTablaSimbolos();
+	private List<TypeError> errorList;
+	public VisitorIdentifier(List<TypeError> errorList){
+		this.errorList = errorList;
+	}
 	@Override 
 	public Object visit(Program program, Object param) {
 		super.visit(program, null);
-		simbolos.print();
+		simbolos.printGlobal();
 		simbolos.printLocal();
 		return null;
 		
@@ -32,7 +42,6 @@ public class VisitorIdentifier extends AbstractVisitor{
 	public Object visit(Function function, Object param) {
 		simbolos.reset();
 		simbolos.setAmbito(0);
-		//System.out.println(function.toString());
 		function.getDefinition().accept(this, null);
 		simbolos.setAmbito(1);
 		for(InstructionDefinition inst : function.getDefinitions()){
@@ -56,7 +65,6 @@ public class VisitorIdentifier extends AbstractVisitor{
 	@Override
 	public Object visit(RegularExpressionArrayRef regularExpressionArrayRef,
 			Object param) {
-		//System.out.println (regularExpressionArrayRef.toString());
 		regularExpressionArrayRef.getExpression().accept(this, null);
 		regularExpressionArrayRef.getIndex().accept(this, null);
 
@@ -67,7 +75,6 @@ public class VisitorIdentifier extends AbstractVisitor{
 	public Object visit(
 			RegularExpressionFunctionRef regularExpressionFunctionRef,
 			Object param) {
-		//System.out.println (regularExpressionFunctionRef.toString());
 		regularExpressionFunctionRef.getExpression().accept(this, null);
 		for (Expression defs : regularExpressionFunctionRef.getParameters()){
 			
@@ -78,21 +85,18 @@ public class VisitorIdentifier extends AbstractVisitor{
 
 	@Override
 	public Object visit(RegularExpressionInt regularExpressionInt, Object param) {
-		//System.out.println(regularExpressionInt.toString() +  "Value: " + regularExpressionInt.getValue());
 		return null;
 	}
 
 	@Override
 	public Object visit(RegularExpressionLetter regularExpressionLetter,
 			Object param) {
-		//System.out.println(regularExpressionLetter.toString() +  "Value: " + regularExpressionLetter.getValue());
 		return null;
 	}
 
 	@Override
 	public Object visit(RegularExpressionMatrixRef regularExpressionMatrixRef,
 			Object param) {
-		//System.out.println(regularExpressionMatrixRef.toString());
 		regularExpressionMatrixRef.getExpression().accept(this, null);
 		regularExpressionMatrixRef.getRowIndex().accept(this, null);
 		regularExpressionMatrixRef.getColumnIndex().accept(this, null);
@@ -102,23 +106,31 @@ public class VisitorIdentifier extends AbstractVisitor{
 	@Override
 	public Object visit(RegularExpressionReal regularExpressionReal,
 			Object param) {
-		//System.out.println(regularExpressionReal.toString() +  "Value: " + regularExpressionReal.getValue());
 		return null;
 	}
 
 	@Override
 	public Object visit(RegularExpressionStructRef regularExpressionStructRef,
 			Object param) {
-		//System.out.println(regularExpressionStructRef.toString());
+		boolean found = false;
 		regularExpressionStructRef.getLeft().accept(this, null);
-		regularExpressionStructRef.getRight().accept(this, null);
+		InstructionDefinition exp = simbolos.buscar(((RegularExpressionVariable) (regularExpressionStructRef.getLeft())).getName());
+		List<InstructionDefinition> list = ((TypeSpecialStruct)exp.getType()).getBody();
+		for (InstructionDefinition def : list){
+			if (((RegularExpressionVariable)def.getName()).getName().compareTo(((RegularExpressionVariable)regularExpressionStructRef.getRight()).getName()) == 0){
+				found = true; 
+				break;
+			}
+		}
+		if (!found){
+			errorList.add(new TypeError(regularExpressionStructRef.getColumn(), regularExpressionStructRef.getLine(), "ERROR: (line " + regularExpressionStructRef.getLine()+" column " + regularExpressionStructRef.getColumn() +")" + " Variable " + ((RegularExpressionVariable)regularExpressionStructRef.getRight()).getName() + " not defined"));
+		}
 		return null;
 	}
 
 	@Override
 	public Object visit(RegularExpressionVariable regularExpressionVariable,
 			Object param) {
-		//System.out.println(regularExpressionVariable.toString() + " Value: " + regularExpressionVariable.getName());
 		boolean local = false;
 		boolean global = false;
 		if (simbolos.buscarReferenciasLocal(regularExpressionVariable.getName()) != null){
@@ -127,7 +139,7 @@ public class VisitorIdentifier extends AbstractVisitor{
 			global = true;
 		}
 		if (!(global || local)){
-			System.err.println("ERROR: (line " + regularExpressionVariable.getLine()+" column " + regularExpressionVariable.getColumn() +")" + " Variable " + regularExpressionVariable.getName() + " not defined");
+			errorList.add(new TypeError(regularExpressionVariable.getColumn(), regularExpressionVariable.getLine(), "ERROR: (line " + regularExpressionVariable.getLine()+" column " + regularExpressionVariable.getColumn() +")" + " Variable " + regularExpressionVariable.getName() + " not defined"));
 		}
 		return null;
 	}
@@ -151,24 +163,16 @@ public class VisitorIdentifier extends AbstractVisitor{
 	public Object visit(InstructionDefinition instructionDefinition,
 			Object param) {
 		if (instructionDefinition.getName() != null){
-			boolean local = false;
-			boolean global = false;
-			if (simbolos.buscarReferenciasLocal(((RegularExpressionVariable)instructionDefinition.getName()).getName()) != null){
-				local = true;
-			}if (simbolos.buscarReferenciasGlobales(((RegularExpressionVariable)instructionDefinition.getName()).getName()) != null){
-				global = true;
+			boolean defined = false; 
+			if (simbolos.buscarAmbitoActual(((RegularExpressionVariable)instructionDefinition.getName()).getName()) != null){
+				defined = true;
 			}
-			if ((global && local)){
-				
-					System.err.println("ERROR: (line " + instructionDefinition.getLine()+" column " + instructionDefinition.getColumn() +")" +" Variable " +
-						((RegularExpressionVariable)instructionDefinition.getName()).getName() 
-						+" already exist ");
+			if (defined){
+				errorList.add(new TypeError(instructionDefinition.getColumn(), instructionDefinition.getLine(), "ERROR: (line " + instructionDefinition.getLine() +" column " + instructionDefinition.getColumn() +"): Variable "+((RegularExpressionVariable)instructionDefinition.getName()).getName()+" already Defined"));
 			}
 			else {
 				if (simbolos.insertar(instructionDefinition, simbolos.getAmbito())){
-					//System.err.println("Variable " +
-				//((RegularExpressionVariable)instructionDefinition.getName()).getName() 
-				//+" added ");
+					
 				}
 			}
 			

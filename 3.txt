@@ -1,7 +1,8 @@
-//comment 
-int a; 
-int b; 
-
 void main (){
-	return 0; 
+	int a; 
+	a = 0; 
+	int b; 
+	input(b);
+	print(a); 
+	print (b); 
 }

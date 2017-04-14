@@ -65,7 +65,7 @@ public abstract class AbstractVisitor implements Visitor {
 			Object param) {
 		//System.out.println(instructionFunctionCall.toString());
 		instructionFunctionCall.getExpression().accept(this, null);
-		for (CallParameter inst : instructionFunctionCall.getParameters()){
+		for (RegularExpression inst : instructionFunctionCall.getParameters()){
 			inst.accept(this, null);
 		}
 		return null;

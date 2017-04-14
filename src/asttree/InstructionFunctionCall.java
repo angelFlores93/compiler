@@ -6,8 +6,8 @@ import visitor.Visitor;
 
 public class InstructionFunctionCall extends AbstractASTNode implements Instruction {
 	private Expression expression; 
-	private List<CallParameter> parameters; 
-	public InstructionFunctionCall(int column, int line, Expression expression, List<CallParameter> parameters) {
+	private List<RegularExpression> parameters; 
+	public InstructionFunctionCall(int column, int line, Expression expression, List<RegularExpression> parameters) {
 		super(column, line);
 		this.expression = expression; 
 		this.parameters = parameters; 
@@ -22,11 +22,11 @@ public class InstructionFunctionCall extends AbstractASTNode implements Instruct
 		this.expression = expression;
 	}
 
-	public List<CallParameter> getParameters() {
+	public List<RegularExpression> getParameters() {
 		return parameters;
 	}
 
-	public void setParameters(List<CallParameter> parameters) {
+	public void setParameters(List<RegularExpression> parameters) {
 		this.parameters = parameters;
 	}
 
