@@ -6,6 +6,7 @@ import asttree.ArithmeticExpression;
 import asttree.BinaryExpression;
 import asttree.CastExpression;
 import asttree.InstructionAsignation;
+import asttree.InstructionDefinition;
 import asttree.RegularExpressionArrayRef;
 import asttree.RegularExpressionFunctionRef;
 import asttree.RegularExpressionInt;
@@ -15,6 +16,7 @@ import asttree.RegularExpressionReal;
 import asttree.RegularExpressionStructRef;
 import asttree.RegularExpressionVariable;
 import asttree.TypeError;
+import asttree.TypeFunction;
 import asttree.TypeNormal;
 
 public class VisitorLValue extends AbstractVisitor{
@@ -95,7 +97,21 @@ public class VisitorLValue extends AbstractVisitor{
 		
 		return null;
 	}
-
+	@Override
+	public Object visit(InstructionDefinition instructionDefinition,
+			Object param) {
+		//System.out.println(instructionDefinition.toString());
+		instructionDefinition.getType().accept(this, null);
+		if(instructionDefinition.getType() instanceof TypeFunction){
+			if (instructionDefinition.getName() != null)
+				instructionDefinition.getName().setLvalue(false);
+		}else
+		{
+			instructionDefinition.getName().accept(this, null);
+		}
+		
+		return null;
+	}
 	@Override
 	public Object visit(CastExpression castExpression, Object param) {
 		castExpression.setLvalue(false);
@@ -107,5 +123,5 @@ public class VisitorLValue extends AbstractVisitor{
 		arithmeticExpression.setLvalue(false);
 		return null;
 	}
-
+	
 }

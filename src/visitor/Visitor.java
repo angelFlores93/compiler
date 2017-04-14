@@ -33,5 +33,6 @@ public interface Visitor {
 	Object visit(CastExpression castExpression, Object param);
 	Object visit(ArithmeticExpression arithmeticExpression, Object param);
 	Object visit(TypeNormal typeNormal, Object param);
+	Object visit(TypeFunction typeFunction, Object param);
 
 }

@@ -18,7 +18,9 @@ public class VisitorTypeCheck extends AbstractVisitor{
 		System.out.println("visiting AE");
 		arithmeticExpression.getLeft().accept(this, null);
 		arithmeticExpression.getRight().accept(this, null);
+		System.out.println(arithmeticExpression.getRight().getType());
 		Type type = arithmeticExpression.getLeft().getType().aritmetical(arithmeticExpression.getRight().getType());
+		
 		if (type == null){
 			errorList.add(new TypeError(arithmeticExpression.getColumn(), arithmeticExpression.getLine(), ("ERROR: (line " + arithmeticExpression.getLine() + " column " + arithmeticExpression.getColumn() + ") Incompatible types")));
 		}else
@@ -41,7 +43,7 @@ public class VisitorTypeCheck extends AbstractVisitor{
 				binaryExpression.setType(type);
 			}
 			else{
-				errorList.add(new TypeError(binaryExpression.getColumn(), binaryExpression.getLine(), ("ERROR: (line " + binaryExpression.getLine() + " column " + binaryExpression.getColumn() + ") Invalid comparisson between types")));
+				errorList.add(new TypeError(binaryExpression.getColumn(), binaryExpression.getLine(), ("ERROR: (line " + binaryExpression.getLeft().getLine() + " column " + binaryExpression.getLeft().getColumn() + ") Invalid comparisson between types")));
 			}
 			
 		}
@@ -79,6 +81,7 @@ public class VisitorTypeCheck extends AbstractVisitor{
 		System.out.println("visiting Function");
 		function.getDefinition().accept(this, null);
 		Type functionType = function.getDefinition().getType();
+		
 		if (!function.getDefinitions().isEmpty())
 			for(InstructionDefinition inst : function.getDefinitions()){
 				inst.accept(this, null);
@@ -89,8 +92,11 @@ public class VisitorTypeCheck extends AbstractVisitor{
 			}
 		function.getReturnStm().accept(this, param);
 		Type returnType = function.getReturnStm().getType();
+		System.out.println(returnType);
 		if (((TypeNormal)functionType).getType().compareTo(((TypeNormal)returnType).getType()) == 0){
-			function.setType(new TypeNormal(function.getColumn(), function.getLine(),((TypeNormal)functionType).getType()));
+			Type newType = new TypeFunction(function.getColumn(), function.getLine(),functionType, function.getDefinitions());
+			function.setType(newType);
+			function.getDefinition().setType(newType);
 		}else{
 			errorList.add(new TypeError(function.getColumn(), function.getLine(), ("ERROR: (line " + function.getLine() + " column " + function.getColumn() + ") Incompatible types between function and return statement")));
 		}
@@ -101,6 +107,7 @@ public class VisitorTypeCheck extends AbstractVisitor{
 		//System.out.println (instructionReturn.toString());
 		System.out.println("visiting return stm");
 		instructionReturn.getExpression().accept(this, null);
+		
 		instructionReturn.setType(instructionReturn.getExpression().getType());
 		return null;
 	}
@@ -111,9 +118,25 @@ public class VisitorTypeCheck extends AbstractVisitor{
 			Object param) {
 		System.out.println("visiting FRef");
 		regularExpressionFunctionRef.getExpression().accept(this, null);
+		
+		System.out.println(regularExpressionFunctionRef.getExpression().getType());
+		TypeFunction t= (TypeFunction) regularExpressionFunctionRef.getExpression().getType(); 
+		System.out.println(t.getParameters().size() +" "+regularExpressionFunctionRef.getParameters().size());
+		if (t.getParameters().size() != regularExpressionFunctionRef.getParameters().size()){
+			errorList.add(new TypeError(regularExpressionFunctionRef.getColumn(), regularExpressionFunctionRef.getLine(), ("ERROR: (line " + regularExpressionFunctionRef.getLine() + " column " + regularExpressionFunctionRef.getColumn() + ") Wrong number of parameters")));
+		}
+		
+		
 		for (Expression defs : regularExpressionFunctionRef.getParameters()){
 			
 			defs.accept(this, null);
+		}
+		if (t.getParameters().size() == regularExpressionFunctionRef.getParameters().size()){
+			for (int i = 0; i < t.getParameters().size(); i++){
+				if (((TypeNormal)t.getParameters().get(i).getType()).getType().compareTo( ((TypeNormal)regularExpressionFunctionRef.getParameters().get(i).getType()).getType()) != 0){
+					errorList.add(new TypeError(regularExpressionFunctionRef.getColumn(), regularExpressionFunctionRef.getLine(), ("ERROR: (line " + regularExpressionFunctionRef.getLine() + " column " + regularExpressionFunctionRef.getColumn() + ") Incompatible parameter type")));
+				}
+			}
 		}
 		InstructionDefinition def = simbolos.buscarReferenciasGlobales(((RegularExpressionVariable)regularExpressionFunctionRef.getExpression()).getName());
 		if (def != null){
@@ -177,20 +200,24 @@ public class VisitorTypeCheck extends AbstractVisitor{
 		}
 		return null;
 	}
+	@Override
+	public Object visit(InstructionDefinition instructionDefinition,
+			Object param) {
+		instructionDefinition.getType().accept(this, null);
+		if (instructionDefinition.getName() != null)
+			instructionDefinition.getName().setType(instructionDefinition.getType());
+		instructionDefinition.setType(instructionDefinition.getType());
+		return null;
+	}
 
 	@Override
 	public Object visit(RegularExpressionVariable regularExpressionVariable,
 			Object param) {
-		System.out.println("visiting var " + regularExpressionVariable.getName());
+
 		InstructionDefinition def = simbolos.buscar(regularExpressionVariable.getName());
-		if (def != null)
-			regularExpressionVariable.setType(def.getType());
-		else 
-			errorList.add(new TypeError(regularExpressionVariable.getColumn(), regularExpressionVariable.getLine(), ("ERROR: (line " + regularExpressionVariable.getLine() + " column " + regularExpressionVariable.getColumn() + ") Incompatible types")));
 		
-		
-			
-		
+		regularExpressionVariable.setType(def.getType());
+
 		
 		return null;
 	}

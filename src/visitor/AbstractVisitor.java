@@ -150,5 +150,13 @@ public abstract class AbstractVisitor implements Visitor {
 		}
 		return null;
 	}
+	@Override
+	public Object visit(TypeFunction typeFunction, Object param){
+		typeFunction.getType().accept(this, null);
+		for (InstructionDefinition inst : typeFunction.getParameters()){
+			inst.accept(this, null);
+		}
+		return null;
+	}
 
 }

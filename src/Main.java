@@ -49,12 +49,27 @@ public class Main
 			System.err.println("__________________Calling Identifier Visitor_________________");
 			List<TypeError> errors = new ArrayList<TypeError>();
 			sintactico.ast.accept(new VisitorIdentifier(errors),null);
+			if (errors.size() > 0){
+				for (TypeError error : errors){
+					System.err.println(error.getError());
+				}
+				return;
+			}
 			System.err.println("__________________Calling TypeCheck Visitor_________________");
 			sintactico.ast.accept(new VisitorTypeCheck(errors), null);
+			if (errors.size() > 0){
+				for (TypeError error : errors){
+					System.err.println(error.getError());
+				}
+				return;
+			}
 			System.err.println("__________________Calling LValue Visitor_________________");
 			sintactico.ast.accept(new VisitorLValue(errors), null);
-			for (TypeError error : errors){
-				System.err.println(error.getError());
+			if (errors.size() > 0){
+				for (TypeError error : errors){
+					System.err.println(error.getError());
+				}
+				return;
 			}
 			IntrospectorModel model=new IntrospectorModel("Program", sintactico.ast);
 			new IntrospectorTree("Introspector", model);
