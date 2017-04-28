@@ -65,4 +65,16 @@ public class TypeSpecialMatrix extends AbstractType implements TypeSpecial {
 		return "Matrix type node";
 	}
 
+	@Override
+	public String getPrefix() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getOffset() {
+		// TODO Auto-generated method stub
+		return getType().getOffset()*getRows()*getColumns();
+	}
+
 }

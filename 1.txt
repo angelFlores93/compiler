@@ -1,34 +1,9 @@
-int a;
-int b; 
-struct {
-int y; 
-int z; 
-}t;
-int asdf (int aS){
-	int c;
-	int d; 
-	return 2; 
-}
-void main (){
-	a = 0;  
-	b = 1;
-	char q; 
-	if (a != 0){
-		int w;
-		if (a == 1){
-			a = a + b;
-			b = b - a;
-		}
-	}else{
-		if (a <= t.y ){
-			a = a * b; 
-			b = b / a;
-		}else{
-			 
-		}
-	}
-	a = asdf(1) + 0;
-	out b;
-	t.y = 2;
-	t.z = 1; 
+// Global variables
+int i,n;
+char c;
+
+// Main program
+void main() {
+  n = 10; 
+  out n;
 }

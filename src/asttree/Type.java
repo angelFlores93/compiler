@@ -14,4 +14,6 @@ public interface Type extends AST{
 	public Type castTo(Type type);
 	public Type invocation();
 	public Type promotionTo(Type type);
+	public String getPrefix();
+	public int getOffset();
 }

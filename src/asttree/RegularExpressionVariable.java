@@ -4,7 +4,17 @@ import visitor.Visitor;
 
 public class RegularExpressionVariable extends AbstractRegularExpression implements RegularExpression {
 	private String name; 
-	
+	private int direction;
+	public int getDirection() {
+		return direction;
+	}
+
+
+	public void setDirection(int direction) {
+		this.direction = direction;
+	}
+
+
 	public RegularExpressionVariable(int column, int line, String name) {
 		super(column, line);
 		this.name = name ;

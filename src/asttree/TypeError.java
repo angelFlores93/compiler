@@ -26,6 +26,20 @@ public class TypeError extends AbstractType implements Type {
 		return "Error Type";
 	}
 
+
+	@Override
+	public String getPrefix() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public int getOffset() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 	
 
 }

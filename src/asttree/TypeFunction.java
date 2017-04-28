@@ -120,4 +120,16 @@ public class TypeFunction extends AbstractType implements Type {
 		return "Function type"; 
 	}
 
+	@Override
+	public String getPrefix() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getOffset() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

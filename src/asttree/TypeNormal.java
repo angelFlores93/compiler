@@ -114,4 +114,18 @@ public class TypeNormal extends AbstractType{
 			return this;
 		return null;
 	}
+	public String getPrefix(){
+		if (getType().compareTo("int") == 0) return "i"; 
+		if (getType().compareTo("double") == 0) return "f";
+		if (getType().compareTo("char") == 0) return "";
+		return null; 
+	}
+
+	@Override
+	public int getOffset() {
+		if (getType().compareTo("int") == 0) return 2; 
+		if (getType().compareTo("double") == 0) return 4;
+		if (getType().compareTo("char") == 0) return 1;
+		return 0;
+	}
 }

@@ -6,6 +6,7 @@ public class BinaryExpression extends AbstractRegularExpression implements Expre
 	private Expression left; 
 	private Expression right;
 	private String operation; 
+	private String label;
 	
 	public BinaryExpression(int column, int line, Expression left, Expression right, String operation) {
 		super(column, line);
@@ -14,6 +15,14 @@ public class BinaryExpression extends AbstractRegularExpression implements Expre
 		this.operation = operation;
 	}
 	
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
 	public String getOperation() {
 		return operation;
 	}

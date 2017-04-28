@@ -59,4 +59,18 @@ public class TypeSpecialArray extends AbstractType implements TypeSpecial {
 		return "Array Type node" ;
 	}
 
+
+	@Override
+	public String getPrefix() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public int getOffset() {
+		// TODO Auto-generated method stub
+		return getType().getOffset()*getSize();
+	}
+
 }

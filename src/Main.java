@@ -6,14 +6,20 @@ import introspector.model.IntrospectorModel;
 import introspector.view.IntrospectorTree;
 import lexico.Lexico;
 
-
+import java.io.File;
 // ===================
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
+import CodeGeneration.Instructions;
+import CodeGeneration.VisitorCodeGeneration;
+import asttree.AST;
 import asttree.TypeError;
+
 
 public class Main 
 {
@@ -71,6 +77,11 @@ public class Main
 				}
 				return;
 			}
+			System.err.println("__________________Calling CodeGeneration Visitor_________________");
+			sintactico.ast.accept(new Instructions(), null);
+			
+			
+			
 			IntrospectorModel model=new IntrospectorModel("Program", sintactico.ast);
 			new IntrospectorTree("Introspector", model);
 		} catch (Exception e) {

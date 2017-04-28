@@ -23,20 +23,21 @@
   15  functions :
   16            | function functions
 
-  17  function : type ID '(' parametersFunction ')' '{' instructions '}'
+  17  function : type ID '(' parametersFunction ')' '{' instructions returnStm '}'
 
-  18  instructions : instruction
-  19               | instructions instruction
+  18  returnStm : RETURN exp ';'
 
-  20  instruction : definition
-  21              | INPUT exp ';'
-  22              | PRINT exp ';'
-  23              | exp '=' exp ';'
-  24              | ID '(' parameters ')' ';'
-  25              | WHILE expCompare spetialStatement
-  26              | IF expCompare spetialStatement
-  27              | IF expCompare spetialStatement ELSE spetialStatement
-  28              | RETURN exp ';'
+  19  instructions : instruction
+  20               | instructions instruction
+
+  21  instruction : definition
+  22              | INPUT exp ';'
+  23              | PRINT exp ';'
+  24              | exp '=' exp ';'
+  25              | ID '(' parameters ')' ';'
+  26              | WHILE expCompare spetialStatement
+  27              | IF expCompare spetialStatement
+  28              | IF expCompare spetialStatement ELSE spetialStatement
 
   29  spetialStatement : '{' instructions '}'
   30                   | '{' '}'
@@ -172,7 +173,7 @@ state 10
 	definition : type . vars ';'  (4)
 	specialTypes : type . '[' INTEGER ']' ID ';'  (9)
 	specialTypes : type . '[' INTEGER ']' '[' INTEGER ']' ID ';'  (10)
-	function : type . ID '(' parametersFunction ')' '{' instructions '}'  (17)
+	function : type . ID '(' parametersFunction ')' '{' instructions returnStm '}'  (17)
 
 	ID  shift 15
 	'['  shift 16
@@ -220,7 +221,7 @@ state 14
 
 state 15
 	vars : ID .  (6)
-	function : type ID . '(' parametersFunction ')' '{' instructions '}'  (17)
+	function : type ID . '(' parametersFunction ')' '{' instructions returnStm '}'  (17)
 
 	'('  shift 22
 	';'  reduce 6
@@ -251,7 +252,7 @@ state 18
 
 
 state 19
-	function : type . ID '(' parametersFunction ')' '{' instructions '}'  (17)
+	function : type . ID '(' parametersFunction ')' '{' instructions returnStm '}'  (17)
 
 	ID  shift 26
 	.  error
@@ -282,7 +283,7 @@ state 21
 
 
 state 22
-	function : type ID '(' . parametersFunction ')' '{' instructions '}'  (17)
+	function : type ID '(' . parametersFunction ')' '{' instructions returnStm '}'  (17)
 	parametersFunction : .  (32)
 
 	STRING  shift 3
@@ -319,7 +320,7 @@ state 25
 
 
 state 26
-	function : type ID . '(' parametersFunction ')' '{' instructions '}'  (17)
+	function : type ID . '(' parametersFunction ')' '{' instructions returnStm '}'  (17)
 
 	'('  shift 22
 	.  error
@@ -366,7 +367,7 @@ state 30
 
 
 state 31
-	function : type ID '(' parametersFunction . ')' '{' instructions '}'  (17)
+	function : type ID '(' parametersFunction . ')' '{' instructions returnStm '}'  (17)
 	parametersFunction : parametersFunction . ',' parameterFunction  (34)
 
 	')'  shift 45
@@ -509,7 +510,7 @@ state 44
 
 
 state 45
-	function : type ID '(' parametersFunction ')' . '{' instructions '}'  (17)
+	function : type ID '(' parametersFunction ')' . '{' instructions returnStm '}'  (17)
 
 	'{'  shift 61
 	.  error
@@ -687,20 +688,19 @@ state 60
 	ID  shift 77
 	INPUT  shift 78
 	PRINT  shift 79
-	RETURN  shift 80
 	'('  shift 40
 	.  error
 
-	instructions  goto 81
-	definition  goto 82
+	instructions  goto 80
+	definition  goto 81
 	type  goto 28
 	specialTypes  goto 11
-	exp  goto 83
-	instruction  goto 84
+	exp  goto 82
+	instruction  goto 83
 
 
 state 61
-	function : type ID '(' parametersFunction ')' '{' . instructions '}'  (17)
+	function : type ID '(' parametersFunction ')' '{' . instructions returnStm '}'  (17)
 
 	STRINGVALUE  shift 35
 	INTEGER  shift 36
@@ -716,16 +716,15 @@ state 61
 	ID  shift 77
 	INPUT  shift 78
 	PRINT  shift 79
-	RETURN  shift 80
 	'('  shift 40
 	.  error
 
-	instructions  goto 85
-	definition  goto 82
+	instructions  goto 84
+	definition  goto 81
 	type  goto 28
 	specialTypes  goto 11
-	exp  goto 83
-	instruction  goto 84
+	exp  goto 82
+	instruction  goto 83
 
 
 state 62
@@ -743,7 +742,7 @@ state 63
 state 64
 	specialTypes : type '[' INTEGER ']' '[' INTEGER . ']' ID ';'  (10)
 
-	']'  shift 86
+	']'  shift 85
 	.  error
 
 
@@ -756,12 +755,12 @@ state 65
 	REAL  shift 37
 	LETTER  shift 38
 	ID  shift 39
-	')'  shift 87
+	')'  shift 86
 	'('  shift 40
 	.  error
 
-	exp  goto 88
-	exps  goto 89
+	exp  goto 87
+	exps  goto 88
 
 
 state 66
@@ -775,7 +774,7 @@ state 66
 	'('  shift 40
 	.  error
 
-	exp  goto 90
+	exp  goto 89
 
 
 state 67
@@ -1050,36 +1049,36 @@ state 74
 	'%'  shift 55
 	'^'  shift 56
 	'.'  shift 57
-	']'  shift 91
+	']'  shift 90
 	'['  shift 58
 	.  error
 
 
 state 75
-	instruction : IF . expCompare spetialStatement  (26)
-	instruction : IF . expCompare spetialStatement ELSE spetialStatement  (27)
+	instruction : IF . expCompare spetialStatement  (27)
+	instruction : IF . expCompare spetialStatement ELSE spetialStatement  (28)
 
-	'('  shift 92
+	'('  shift 91
+	.  error
+
+	expCompare  goto 92
+
+
+state 76
+	instruction : WHILE . expCompare spetialStatement  (26)
+
+	'('  shift 91
 	.  error
 
 	expCompare  goto 93
 
 
-state 76
-	instruction : WHILE . expCompare spetialStatement  (25)
-
-	'('  shift 92
-	.  error
-
-	expCompare  goto 94
-
-
 state 77
-	instruction : ID . '(' parameters ')' ';'  (24)
+	instruction : ID . '(' parameters ')' ';'  (25)
 	exp : ID . '(' parameters ')'  (62)
 	exp : ID .  (68)
 
-	'('  shift 95
+	'('  shift 94
 	'-'  reduce 68
 	'+'  reduce 68
 	'*'  reduce 68
@@ -1092,7 +1091,21 @@ state 77
 
 
 state 78
-	instruction : INPUT . exp ';'  (21)
+	instruction : INPUT . exp ';'  (22)
+
+	STRINGVALUE  shift 35
+	INTEGER  shift 36
+	REAL  shift 37
+	LETTER  shift 38
+	ID  shift 39
+	'('  shift 40
+	.  error
+
+	exp  goto 95
+
+
+state 79
+	instruction : PRINT . exp ';'  (23)
 
 	STRINGVALUE  shift 35
 	INTEGER  shift 36
@@ -1105,37 +1118,9 @@ state 78
 	exp  goto 96
 
 
-state 79
-	instruction : PRINT . exp ';'  (22)
-
-	STRINGVALUE  shift 35
-	INTEGER  shift 36
-	REAL  shift 37
-	LETTER  shift 38
-	ID  shift 39
-	'('  shift 40
-	.  error
-
-	exp  goto 97
-
-
 state 80
-	instruction : RETURN . exp ';'  (28)
-
-	STRINGVALUE  shift 35
-	INTEGER  shift 36
-	REAL  shift 37
-	LETTER  shift 38
-	ID  shift 39
-	'('  shift 40
-	.  error
-
-	exp  goto 98
-
-
-state 81
 	program : definitions functions VOID MAIN '(' ')' '{' instructions . '}'  (1)
-	instructions : instructions . instruction  (19)
+	instructions : instructions . instruction  (20)
 
 	STRINGVALUE  shift 35
 	INTEGER  shift 36
@@ -1151,26 +1136,25 @@ state 81
 	ID  shift 77
 	INPUT  shift 78
 	PRINT  shift 79
-	RETURN  shift 80
 	'('  shift 40
-	'}'  shift 99
+	'}'  shift 97
 	.  error
 
-	definition  goto 82
+	definition  goto 81
 	type  goto 28
 	specialTypes  goto 11
-	exp  goto 83
-	instruction  goto 100
+	exp  goto 82
+	instruction  goto 98
+
+
+state 81
+	instruction : definition .  (21)
+
+	.  reduce 21
 
 
 state 82
-	instruction : definition .  (20)
-
-	.  reduce 20
-
-
-state 83
-	instruction : exp . '=' exp ';'  (23)
+	instruction : exp . '=' exp ';'  (24)
 	exp : exp . '+' exp  (55)
 	exp : exp . '-' exp  (56)
 	exp : exp . '*' exp  (57)
@@ -1189,19 +1173,19 @@ state 83
 	'^'  shift 56
 	'.'  shift 57
 	'['  shift 58
-	'='  shift 101
+	'='  shift 99
 	.  error
 
 
+state 83
+	instructions : instruction .  (19)
+
+	.  reduce 19
+
+
 state 84
-	instructions : instruction .  (18)
-
-	.  reduce 18
-
-
-state 85
-	function : type ID '(' parametersFunction ')' '{' instructions . '}'  (17)
-	instructions : instructions . instruction  (19)
+	function : type ID '(' parametersFunction ')' '{' instructions . returnStm '}'  (17)
+	instructions : instructions . instruction  (20)
 
 	STRINGVALUE  shift 35
 	INTEGER  shift 36
@@ -1217,32 +1201,32 @@ state 85
 	ID  shift 77
 	INPUT  shift 78
 	PRINT  shift 79
-	RETURN  shift 80
+	RETURN  shift 100
 	'('  shift 40
-	'}'  shift 102
 	.  error
 
-	definition  goto 82
+	definition  goto 81
 	type  goto 28
 	specialTypes  goto 11
-	exp  goto 83
-	instruction  goto 100
+	exp  goto 82
+	returnStm  goto 101
+	instruction  goto 98
+
+
+state 85
+	specialTypes : type '[' INTEGER ']' '[' INTEGER ']' . ID ';'  (10)
+
+	ID  shift 102
+	.  error
 
 
 state 86
-	specialTypes : type '[' INTEGER ']' '[' INTEGER ']' . ID ';'  (10)
-
-	ID  shift 103
-	.  error
-
-
-state 87
 	exp : ID '(' parameters ')' .  (62)
 
 	.  reduce 62
 
 
-state 88
+state 87
 	exps : exp .  (40)
 	exp : exp . '+' exp  (55)
 	exp : exp . '-' exp  (56)
@@ -1272,11 +1256,11 @@ state 88
 	','  reduce 40
 
 
-state 89
+state 88
 	parameters : parameters exps .  (37)
 	exps : exps . ',' exp  (41)
 
-	','  shift 104
+	','  shift 103
 	STRINGVALUE  reduce 37
 	INTEGER  reduce 37
 	REAL  reduce 37
@@ -1286,7 +1270,7 @@ state 89
 	'('  reduce 37
 
 
-state 90
+state 89
 	exp : exp . '+' exp  (55)
 	exp : exp . '-' exp  (56)
 	exp : exp . '*' exp  (57)
@@ -1327,11 +1311,11 @@ state 90
 	'>'  reduce 61
 
 
-state 91
+state 90
 	exp : exp '[' exp ']' .  (69)
 	exp : exp '[' exp ']' . '[' exp ']'  (70)
 
-	'['  shift 105
+	'['  shift 104
 	EQUAL  reduce 69
 	NOTEQUAL  reduce 69
 	LET  reduce 69
@@ -1360,7 +1344,7 @@ state 91
 	'>'  reduce 69
 
 
-state 92
+state 91
 	expCompare : '(' . expComp ')'  (38)
 	expCompare : '(' . expBin ')'  (39)
 
@@ -1370,17 +1354,17 @@ state 92
 	LETTER  shift 38
 	ID  shift 39
 	'('  shift 40
-	'!'  shift 106
+	'!'  shift 105
 	.  error
 
-	exp  goto 107
-	expComp  goto 108
-	expBin  goto 109
+	exp  goto 106
+	expComp  goto 107
+	expBin  goto 108
 
 
-state 93
-	instruction : IF expCompare . spetialStatement  (26)
-	instruction : IF expCompare . spetialStatement ELSE spetialStatement  (27)
+state 92
+	instruction : IF expCompare . spetialStatement  (27)
+	instruction : IF expCompare . spetialStatement ELSE spetialStatement  (28)
 
 	STRINGVALUE  shift 35
 	INTEGER  shift 36
@@ -1396,61 +1380,83 @@ state 93
 	ID  shift 77
 	INPUT  shift 78
 	PRINT  shift 79
-	RETURN  shift 80
 	'('  shift 40
-	'{'  shift 110
+	'{'  shift 109
 	.  error
 
-	definition  goto 82
+	definition  goto 81
 	type  goto 28
 	specialTypes  goto 11
-	exp  goto 83
-	instruction  goto 111
+	exp  goto 82
+	instruction  goto 110
+	spetialStatement  goto 111
+
+
+state 93
+	instruction : WHILE expCompare . spetialStatement  (26)
+
+	STRINGVALUE  shift 35
+	INTEGER  shift 36
+	REAL  shift 37
+	LETTER  shift 38
+	STRING  shift 3
+	INT  shift 4
+	DOUBLE  shift 5
+	CHAR  shift 6
+	STRUCT  shift 7
+	IF  shift 75
+	WHILE  shift 76
+	ID  shift 77
+	INPUT  shift 78
+	PRINT  shift 79
+	'('  shift 40
+	'{'  shift 109
+	.  error
+
+	definition  goto 81
+	type  goto 28
+	specialTypes  goto 11
+	exp  goto 82
+	instruction  goto 110
 	spetialStatement  goto 112
 
 
 state 94
-	instruction : WHILE expCompare . spetialStatement  (25)
-
-	STRINGVALUE  shift 35
-	INTEGER  shift 36
-	REAL  shift 37
-	LETTER  shift 38
-	STRING  shift 3
-	INT  shift 4
-	DOUBLE  shift 5
-	CHAR  shift 6
-	STRUCT  shift 7
-	IF  shift 75
-	WHILE  shift 76
-	ID  shift 77
-	INPUT  shift 78
-	PRINT  shift 79
-	RETURN  shift 80
-	'('  shift 40
-	'{'  shift 110
-	.  error
-
-	definition  goto 82
-	type  goto 28
-	specialTypes  goto 11
-	exp  goto 83
-	instruction  goto 111
-	spetialStatement  goto 113
-
-
-state 95
-	instruction : ID '(' . parameters ')' ';'  (24)
+	instruction : ID '(' . parameters ')' ';'  (25)
 	exp : ID '(' . parameters ')'  (62)
 	parameters : .  (36)
 
 	.  reduce 36
 
-	parameters  goto 114
+	parameters  goto 113
+
+
+state 95
+	instruction : INPUT exp . ';'  (22)
+	exp : exp . '+' exp  (55)
+	exp : exp . '-' exp  (56)
+	exp : exp . '*' exp  (57)
+	exp : exp . '/' exp  (58)
+	exp : exp . '%' exp  (59)
+	exp : exp . '^' exp  (60)
+	exp : exp . '.' ID  (67)
+	exp : exp . '[' exp ']'  (69)
+	exp : exp . '[' exp ']' '[' exp ']'  (70)
+
+	'-'  shift 51
+	'+'  shift 52
+	'*'  shift 53
+	'/'  shift 54
+	'%'  shift 55
+	'^'  shift 56
+	'.'  shift 57
+	'['  shift 58
+	';'  shift 114
+	.  error
 
 
 state 96
-	instruction : INPUT exp . ';'  (21)
+	instruction : PRINT exp . ';'  (23)
 	exp : exp . '+' exp  (55)
 	exp : exp . '-' exp  (56)
 	exp : exp . '*' exp  (57)
@@ -1474,67 +1480,19 @@ state 96
 
 
 state 97
-	instruction : PRINT exp . ';'  (22)
-	exp : exp . '+' exp  (55)
-	exp : exp . '-' exp  (56)
-	exp : exp . '*' exp  (57)
-	exp : exp . '/' exp  (58)
-	exp : exp . '%' exp  (59)
-	exp : exp . '^' exp  (60)
-	exp : exp . '.' ID  (67)
-	exp : exp . '[' exp ']'  (69)
-	exp : exp . '[' exp ']' '[' exp ']'  (70)
-
-	'-'  shift 51
-	'+'  shift 52
-	'*'  shift 53
-	'/'  shift 54
-	'%'  shift 55
-	'^'  shift 56
-	'.'  shift 57
-	'['  shift 58
-	';'  shift 116
-	.  error
-
-
-state 98
-	instruction : RETURN exp . ';'  (28)
-	exp : exp . '+' exp  (55)
-	exp : exp . '-' exp  (56)
-	exp : exp . '*' exp  (57)
-	exp : exp . '/' exp  (58)
-	exp : exp . '%' exp  (59)
-	exp : exp . '^' exp  (60)
-	exp : exp . '.' ID  (67)
-	exp : exp . '[' exp ']'  (69)
-	exp : exp . '[' exp ']' '[' exp ']'  (70)
-
-	'-'  shift 51
-	'+'  shift 52
-	'*'  shift 53
-	'/'  shift 54
-	'%'  shift 55
-	'^'  shift 56
-	'.'  shift 57
-	'['  shift 58
-	';'  shift 117
-	.  error
-
-
-state 99
 	program : definitions functions VOID MAIN '(' ')' '{' instructions '}' .  (1)
 
 	.  reduce 1
 
 
-state 100
-	instructions : instructions instruction .  (19)
+state 98
+	instructions : instructions instruction .  (20)
 
-	.  reduce 19
+	.  reduce 20
 
 
-state 101
-	instruction : exp '=' . exp ';'  (23)
+state 99
+	instruction : exp '=' . exp ';'  (24)
 
 	STRINGVALUE  shift 35
 	INTEGER  shift 36
@@ -1544,23 +1502,38 @@ state 101
 	'('  shift 40
 	.  error
 
-	exp  goto 118
+	exp  goto 116
+
+
+state 100
+	returnStm : RETURN . exp ';'  (18)
+
+	STRINGVALUE  shift 35
+	INTEGER  shift 36
+	REAL  shift 37
+	LETTER  shift 38
+	ID  shift 39
+	'('  shift 40
+	.  error
+
+	exp  goto 117
+
+
+state 101
+	function : type ID '(' parametersFunction ')' '{' instructions returnStm . '}'  (17)
+
+	'}'  shift 118
+	.  error
 
 
 state 102
-	function : type ID '(' parametersFunction ')' '{' instructions '}' .  (17)
-
-	.  reduce 17
-
-
-state 103
 	specialTypes : type '[' INTEGER ']' '[' INTEGER ']' ID . ';'  (10)
 
 	';'  shift 119
 	.  error
 
 
-state 104
+state 103
 	exps : exps ',' . exp  (41)
 
 	STRINGVALUE  shift 35
@@ -1574,7 +1547,7 @@ state 104
 	exp  goto 120
 
 
-state 105
+state 104
 	exp : exp '[' exp ']' '[' . exp ']'  (70)
 
 	STRINGVALUE  shift 35
@@ -1588,7 +1561,7 @@ state 105
 	exp  goto 121
 
 
-state 106
+state 105
 	expBin : '!' . expComp  (44)
 	expBin : '!' . exp  (47)
 
@@ -1604,7 +1577,7 @@ state 106
 	expComp  goto 123
 
 
-state 107
+state 106
 	expBin : exp . AND exp  (45)
 	expBin : exp . OR exp  (46)
 	expBin : exp .  (48)
@@ -1643,7 +1616,7 @@ state 107
 	')'  reduce 48
 
 
-state 108
+state 107
 	expCompare : '(' expComp . ')'  (38)
 	expBin : expComp . AND expComp  (42)
 	expBin : expComp . OR expComp  (43)
@@ -1654,14 +1627,14 @@ state 108
 	.  error
 
 
-state 109
+state 108
 	expCompare : '(' expBin . ')'  (39)
 
 	')'  shift 135
 	.  error
 
 
-state 110
+state 109
 	spetialStatement : '{' . instructions '}'  (29)
 	spetialStatement : '{' . '}'  (30)
 
@@ -1679,57 +1652,56 @@ state 110
 	ID  shift 77
 	INPUT  shift 78
 	PRINT  shift 79
-	RETURN  shift 80
 	'('  shift 40
 	'}'  shift 136
 	.  error
 
 	instructions  goto 137
-	definition  goto 82
+	definition  goto 81
 	type  goto 28
 	specialTypes  goto 11
-	exp  goto 83
-	instruction  goto 84
+	exp  goto 82
+	instruction  goto 83
 
 
-state 111
+state 110
 	spetialStatement : instruction .  (31)
 
 	.  reduce 31
 
 
-state 112
-	instruction : IF expCompare spetialStatement .  (26)
-	instruction : IF expCompare spetialStatement . ELSE spetialStatement  (27)
+state 111
+	instruction : IF expCompare spetialStatement .  (27)
+	instruction : IF expCompare spetialStatement . ELSE spetialStatement  (28)
 
 	ELSE  shift 138
-	STRINGVALUE  reduce 26
-	INTEGER  reduce 26
-	REAL  reduce 26
-	LETTER  reduce 26
-	STRING  reduce 26
-	INT  reduce 26
-	DOUBLE  reduce 26
-	CHAR  reduce 26
-	STRUCT  reduce 26
-	IF  reduce 26
-	WHILE  reduce 26
-	ID  reduce 26
-	INPUT  reduce 26
-	PRINT  reduce 26
-	RETURN  reduce 26
-	'('  reduce 26
-	'}'  reduce 26
+	STRINGVALUE  reduce 27
+	INTEGER  reduce 27
+	REAL  reduce 27
+	LETTER  reduce 27
+	STRING  reduce 27
+	INT  reduce 27
+	DOUBLE  reduce 27
+	CHAR  reduce 27
+	STRUCT  reduce 27
+	IF  reduce 27
+	WHILE  reduce 27
+	ID  reduce 27
+	INPUT  reduce 27
+	PRINT  reduce 27
+	RETURN  reduce 27
+	'('  reduce 27
+	'}'  reduce 27
+
+
+state 112
+	instruction : WHILE expCompare spetialStatement .  (26)
+
+	.  reduce 26
 
 
 state 113
-	instruction : WHILE expCompare spetialStatement .  (25)
-
-	.  reduce 25
-
-
-state 114
-	instruction : ID '(' parameters . ')' ';'  (24)
+	instruction : ID '(' parameters . ')' ';'  (25)
 	parameters : parameters . exps  (37)
 	exp : ID '(' parameters . ')'  (62)
 
@@ -1742,30 +1714,24 @@ state 114
 	'('  shift 40
 	.  error
 
-	exp  goto 88
-	exps  goto 89
+	exp  goto 87
+	exps  goto 88
 
 
-state 115
-	instruction : INPUT exp ';' .  (21)
-
-	.  reduce 21
-
-
-state 116
-	instruction : PRINT exp ';' .  (22)
+state 114
+	instruction : INPUT exp ';' .  (22)
 
 	.  reduce 22
 
 
-state 117
-	instruction : RETURN exp ';' .  (28)
+state 115
+	instruction : PRINT exp ';' .  (23)
 
-	.  reduce 28
+	.  reduce 23
 
 
-state 118
-	instruction : exp '=' exp . ';'  (23)
+state 116
+	instruction : exp '=' exp . ';'  (24)
 	exp : exp . '+' exp  (55)
 	exp : exp . '-' exp  (56)
 	exp : exp . '*' exp  (57)
@@ -1786,6 +1752,36 @@ state 118
 	'['  shift 58
 	';'  shift 140
 	.  error
+
+
+state 117
+	returnStm : RETURN exp . ';'  (18)
+	exp : exp . '+' exp  (55)
+	exp : exp . '-' exp  (56)
+	exp : exp . '*' exp  (57)
+	exp : exp . '/' exp  (58)
+	exp : exp . '%' exp  (59)
+	exp : exp . '^' exp  (60)
+	exp : exp . '.' ID  (67)
+	exp : exp . '[' exp ']'  (69)
+	exp : exp . '[' exp ']' '[' exp ']'  (70)
+
+	'-'  shift 51
+	'+'  shift 52
+	'*'  shift 53
+	'/'  shift 54
+	'%'  shift 55
+	'^'  shift 56
+	'.'  shift 57
+	'['  shift 58
+	';'  shift 141
+	.  error
+
+
+state 118
+	function : type ID '(' parametersFunction ')' '{' instructions returnStm '}' .  (17)
+
+	.  reduce 17
 
 
 state 119
@@ -1843,7 +1839,7 @@ state 121
 	'%'  shift 55
 	'^'  shift 56
 	'.'  shift 57
-	']'  shift 141
+	']'  shift 142
 	'['  shift 58
 	.  error
 
@@ -1900,7 +1896,7 @@ state 124
 	'('  shift 40
 	.  error
 
-	exp  goto 142
+	exp  goto 143
 
 
 state 125
@@ -1914,7 +1910,7 @@ state 125
 	'('  shift 40
 	.  error
 
-	exp  goto 143
+	exp  goto 144
 
 
 state 126
@@ -1928,7 +1924,7 @@ state 126
 	'('  shift 40
 	.  error
 
-	exp  goto 144
+	exp  goto 145
 
 
 state 127
@@ -1942,7 +1938,7 @@ state 127
 	'('  shift 40
 	.  error
 
-	exp  goto 145
+	exp  goto 146
 
 
 state 128
@@ -1956,7 +1952,7 @@ state 128
 	'('  shift 40
 	.  error
 
-	exp  goto 146
+	exp  goto 147
 
 
 state 129
@@ -1970,7 +1966,7 @@ state 129
 	'('  shift 40
 	.  error
 
-	exp  goto 147
+	exp  goto 148
 
 
 state 130
@@ -1984,7 +1980,7 @@ state 130
 	'('  shift 40
 	.  error
 
-	exp  goto 148
+	exp  goto 149
 
 
 state 131
@@ -1998,7 +1994,7 @@ state 131
 	'('  shift 40
 	.  error
 
-	exp  goto 149
+	exp  goto 150
 
 
 state 132
@@ -2012,8 +2008,8 @@ state 132
 	'('  shift 40
 	.  error
 
-	exp  goto 150
-	expComp  goto 151
+	exp  goto 151
+	expComp  goto 152
 
 
 state 133
@@ -2027,8 +2023,8 @@ state 133
 	'('  shift 40
 	.  error
 
-	exp  goto 150
-	expComp  goto 152
+	exp  goto 151
+	expComp  goto 153
 
 
 state 134
@@ -2050,7 +2046,7 @@ state 136
 
 
 state 137
-	instructions : instructions . instruction  (19)
+	instructions : instructions . instruction  (20)
 	spetialStatement : '{' instructions . '}'  (29)
 
 	STRINGVALUE  shift 35
@@ -2067,20 +2063,19 @@ state 137
 	ID  shift 77
 	INPUT  shift 78
 	PRINT  shift 79
-	RETURN  shift 80
 	'('  shift 40
-	'}'  shift 153
+	'}'  shift 154
 	.  error
 
-	definition  goto 82
+	definition  goto 81
 	type  goto 28
 	specialTypes  goto 11
-	exp  goto 83
-	instruction  goto 100
+	exp  goto 82
+	instruction  goto 98
 
 
 state 138
-	instruction : IF expCompare spetialStatement ELSE . spetialStatement  (27)
+	instruction : IF expCompare spetialStatement ELSE . spetialStatement  (28)
 
 	STRINGVALUE  shift 35
 	INTEGER  shift 36
@@ -2096,24 +2091,23 @@ state 138
 	ID  shift 77
 	INPUT  shift 78
 	PRINT  shift 79
-	RETURN  shift 80
 	'('  shift 40
-	'{'  shift 110
+	'{'  shift 109
 	.  error
 
-	definition  goto 82
+	definition  goto 81
 	type  goto 28
 	specialTypes  goto 11
-	exp  goto 83
-	instruction  goto 111
-	spetialStatement  goto 154
+	exp  goto 82
+	instruction  goto 110
+	spetialStatement  goto 155
 
 
 state 139
-	instruction : ID '(' parameters ')' . ';'  (24)
+	instruction : ID '(' parameters ')' . ';'  (25)
 	exp : ID '(' parameters ')' .  (62)
 
-	';'  shift 155
+	';'  shift 156
 	'-'  reduce 62
 	'+'  reduce 62
 	'*'  reduce 62
@@ -2126,18 +2120,24 @@ state 139
 
 
 state 140
-	instruction : exp '=' exp ';' .  (23)
+	instruction : exp '=' exp ';' .  (24)
 
-	.  reduce 23
+	.  reduce 24
 
 
 state 141
+	returnStm : RETURN exp ';' .  (18)
+
+	.  reduce 18
+
+
+state 142
 	exp : exp '[' exp ']' '[' exp ']' .  (70)
 
 	.  reduce 70
 
 
-state 142
+state 143
 	expComp : exp EQUAL exp .  (49)
 	exp : exp . '+' exp  (55)
 	exp : exp . '-' exp  (56)
@@ -2162,7 +2162,7 @@ state 142
 	')'  reduce 49
 
 
-state 143
+state 144
 	expComp : exp NOTEQUAL exp .  (50)
 	exp : exp . '+' exp  (55)
 	exp : exp . '-' exp  (56)
@@ -2187,7 +2187,7 @@ state 143
 	')'  reduce 50
 
 
-state 144
+state 145
 	expComp : exp LET exp .  (51)
 	exp : exp . '+' exp  (55)
 	exp : exp . '-' exp  (56)
@@ -2212,7 +2212,7 @@ state 144
 	')'  reduce 51
 
 
-state 145
+state 146
 	expComp : exp GET exp .  (52)
 	exp : exp . '+' exp  (55)
 	exp : exp . '-' exp  (56)
@@ -2237,7 +2237,7 @@ state 145
 	')'  reduce 52
 
 
-state 146
+state 147
 	expBin : exp AND exp .  (45)
 	exp : exp . '+' exp  (55)
 	exp : exp . '-' exp  (56)
@@ -2260,7 +2260,7 @@ state 146
 	')'  reduce 45
 
 
-state 147
+state 148
 	expBin : exp OR exp .  (46)
 	exp : exp . '+' exp  (55)
 	exp : exp . '-' exp  (56)
@@ -2283,7 +2283,7 @@ state 147
 	')'  reduce 46
 
 
-state 148
+state 149
 	expComp : exp '<' exp .  (53)
 	exp : exp . '+' exp  (55)
 	exp : exp . '-' exp  (56)
@@ -2308,7 +2308,7 @@ state 148
 	')'  reduce 53
 
 
-state 149
+state 150
 	expComp : exp '>' exp .  (54)
 	exp : exp . '+' exp  (55)
 	exp : exp . '-' exp  (56)
@@ -2333,7 +2333,7 @@ state 149
 	')'  reduce 54
 
 
-state 150
+state 151
 	expComp : exp . EQUAL exp  (49)
 	expComp : exp . NOTEQUAL exp  (50)
 	expComp : exp . LET exp  (51)
@@ -2367,38 +2367,38 @@ state 150
 	.  error
 
 
-state 151
+state 152
 	expBin : expComp AND expComp .  (42)
 
 	.  reduce 42
 
 
-state 152
+state 153
 	expBin : expComp OR expComp .  (43)
 
 	.  reduce 43
 
 
-state 153
+state 154
 	spetialStatement : '{' instructions '}' .  (29)
 
 	.  reduce 29
 
 
-state 154
-	instruction : IF expCompare spetialStatement ELSE spetialStatement .  (27)
-
-	.  reduce 27
-
-
 state 155
-	instruction : ID '(' parameters ')' ';' .  (24)
+	instruction : IF expCompare spetialStatement ELSE spetialStatement .  (28)
 
-	.  reduce 24
+	.  reduce 28
+
+
+state 156
+	instruction : ID '(' parameters ')' ';' .  (25)
+
+	.  reduce 25
 
 
 State 39 contains 1 shift/reduce conflict.
 
 
-56 terminals, 20 nonterminals
-71 grammar rules, 156 states
+56 terminals, 21 nonterminals
+71 grammar rules, 157 states

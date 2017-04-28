@@ -6,6 +6,7 @@ public class InstructionDefinition extends AbstractASTNode implements Instructio
 	private Type type; 
 	private Expression name; 
 	private int ambito;
+	private int direction;
 	public InstructionDefinition(int column, int line, Type type, Expression name) {
 		super(column, line);
 		this.type = type; 
@@ -14,6 +15,16 @@ public class InstructionDefinition extends AbstractASTNode implements Instructio
 		// TODO Auto-generated constructor stub
 	}
 	
+
+	public int getDirection() {
+		return direction;
+	}
+
+
+	public void setDirection(int direction) {
+		this.direction = direction;
+	}
+
 
 	public int getAmbito() {
 		return ambito;

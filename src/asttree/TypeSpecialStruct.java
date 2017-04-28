@@ -50,4 +50,19 @@ public class TypeSpecialStruct extends AbstractType implements TypeSpecial {
 		return "Struct Type Node" ;
 	}
 
+	@Override
+	public String getPrefix() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getOffset() {
+		int offset = 0;
+		for (InstructionDefinition inst : getBody()){
+			offset += inst.getType().getOffset();
+		}
+		return offset;
+	}
+
 }
