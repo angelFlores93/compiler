@@ -45,7 +45,7 @@ public class VisitorLValue extends AbstractVisitor{
 
 	@Override
 	public Object visit(RegularExpressionArrayRef regularExpressionArrayRef, Object param) {
-		regularExpressionArrayRef.setLvalue(false);
+		regularExpressionArrayRef.setLvalue(true);
 		return null;
 	}
 

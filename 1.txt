@@ -1,9 +1,14 @@
 // Global variables
 int i,n;
-char c;
-
+char z;
+int sum (){
+	int a, b, c; 
+	a = 3; 
+	b = 5; 
+	c = a + b; 
+	return c;
+}
 // Main program
-void main() {
-  n = 10; 
-  out n;
+void main() { 
+  out sum(); 
 }

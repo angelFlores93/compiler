@@ -77,4 +77,10 @@ public class TypeSpecialMatrix extends AbstractType implements TypeSpecial {
 		return getType().getOffset()*getRows()*getColumns();
 	}
 
+	@Override
+	public String getPrintType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

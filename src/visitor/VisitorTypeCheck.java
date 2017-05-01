@@ -13,6 +13,26 @@ public class VisitorTypeCheck extends AbstractVisitor{
 		this.errorList = errorList; 
 	}
 	@Override
+	public Object visit(InstructionInput instructionInput, Object param) {
+		//System.out.println(instructionInput.toString());
+		instructionInput.getExpression().accept(this, null);
+		Type type = instructionInput.getExpression().getType();
+		if (type != null){
+			if (type instanceof TypeNormal){
+				if (((TypeNormal)type).getType().compareTo("int") != 0){
+					errorList.add(new TypeError(instructionInput.getColumn(), instructionInput.getLine(), ("ERROR: (line " + instructionInput.getLine() + " column " + instructionInput.getColumn() + ") Can't read a non-integer")));
+				}
+			}else{
+				errorList.add(new TypeError(instructionInput.getColumn(), instructionInput.getLine(), ("ERROR: (line " + instructionInput.getLine() + " column " + instructionInput.getColumn() + ") Can't read a non-integer")));
+			}
+					
+		}else{
+			errorList.add(new TypeError(instructionInput.getColumn(), instructionInput.getLine(), ("ERROR: (line " + instructionInput.getLine() + " column " + instructionInput.getColumn() + ") Can't read a non-integer")));
+		}
+		return null;
+	}
+
+	@Override
 	public Object visit(ArithmeticExpression arithmeticExpression,
 			Object param) {
 		System.out.println("visiting AE");
@@ -81,7 +101,7 @@ public class VisitorTypeCheck extends AbstractVisitor{
 		System.out.println("visiting Function");
 		function.getDefinition().accept(this, null);
 		Type functionType = function.getDefinition().getType();
-		
+		System.err.println(functionType);
 		if (!function.getDefinitions().isEmpty())
 			for(InstructionDefinition inst : function.getDefinitions()){
 				inst.accept(this, null);
@@ -90,7 +110,9 @@ public class VisitorTypeCheck extends AbstractVisitor{
 			for(Instruction inst : function.getInstructions()){
 				inst.accept(this, null);
 			}
+		System.err.println("here");
 		function.getReturnStm().accept(this, param);
+		System.err.println("here");
 		Type returnType = function.getReturnStm().getType();
 		System.out.println(returnType);
 		if (((TypeNormal)functionType).getType().compareTo(((TypeNormal)returnType).getType()) == 0){
@@ -213,9 +235,9 @@ public class VisitorTypeCheck extends AbstractVisitor{
 	@Override
 	public Object visit(RegularExpressionVariable regularExpressionVariable,
 			Object param) {
-
-		InstructionDefinition def = simbolos.buscar(regularExpressionVariable.getName());
 		
+		InstructionDefinition def = simbolos.buscar(regularExpressionVariable.getName());
+		System.err.println(def);
 		regularExpressionVariable.setType(def.getType());
 
 		
@@ -232,8 +254,10 @@ public class VisitorTypeCheck extends AbstractVisitor{
 			Object param) {
 		System.out.println("visiting Iasi");
 		instructionAsignation.getLeft().accept(this, null);
+		
 		instructionAsignation.getRight().accept(this, null);
 		Type type = instructionAsignation.getLeft().getType().promotionTo(instructionAsignation.getRight().getType());
+		System.err.println(type);
 		if (type == null){
 			errorList.add(new TypeError(instructionAsignation.getColumn(), instructionAsignation.getLine(), ("ERROR: (line " + instructionAsignation.getLine() + " column " + instructionAsignation.getColumn() + ") Incompatible types")));
 		}

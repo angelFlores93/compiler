@@ -40,6 +40,13 @@ public class TypeError extends AbstractType implements Type {
 		return 0;
 	}
 
+
+	@Override
+	public String getPrintType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
 
 }

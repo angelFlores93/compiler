@@ -117,10 +117,16 @@ public class TypeNormal extends AbstractType{
 	public String getPrefix(){
 		if (getType().compareTo("int") == 0) return "i"; 
 		if (getType().compareTo("double") == 0) return "f";
-		if (getType().compareTo("char") == 0) return "";
+		if (getType().compareTo("char") == 0) return "a";
 		return null; 
 	}
-
+	@Override
+	public String getPrintType(){
+		if (getType().compareTo("int") == 0) return "I"; 
+		if (getType().compareTo("double") == 0) return "F";
+		if (getType().compareTo("char") == 0) return "Ljava/lang/String;";
+		return null; 
+	}
 	@Override
 	public int getOffset() {
 		if (getType().compareTo("int") == 0) return 2; 

@@ -31,7 +31,7 @@ public class Direction extends AbstractVisitor {
 
 	@Override
 	public Object visit(RegularExpressionArrayRef regularExpressionArrayRef, Object param) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 

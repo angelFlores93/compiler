@@ -15,36 +15,45 @@ import visitor.AbstractVisitor;
 
 public class Value extends AbstractVisitor{
 	private Direction dir; 
+	private int labelIndex = 0; 
 	public Value(Direction dir){
 		this.dir = dir; 
 	}
 	@Override
 	public Object visit(BinaryExpression binaryExpression, Object param) {
-		// TODO Auto-generated method stub
+		//System.out.println(binaryExpression.toString());
+		Instructions.out(";Line: " + binaryExpression.getLine());
+		binaryExpression.getLeft().accept(this, null); // load var
+		
+		if(binaryExpression.getRight() != null) 
+			binaryExpression.getRight().accept(this, null); // load var
+		binaryExpression.setLabel("be"+labelIndex++);
+		Instructions.out(Instructions.map.get(String.valueOf(binaryExpression.getOperation())) + " " +binaryExpression.getLabel());
 		return null;
 	}
 
 	@Override
 	public Object visit(RegularExpressionArrayRef regularExpressionArrayRef, Object param) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	@Override
 	public Object visit(RegularExpressionFunctionRef regularExpressionFunctionRef, Object param) {
-		// TODO Auto-generated method stub
+		Instructions.out("invokestatic " + Instructions.OUTPUT_NAME + "." + (((RegularExpressionVariable)regularExpressionFunctionRef.getExpression()).getName()) + "()" + regularExpressionFunctionRef.getType().getPrintType()); 
+	
 		return null;
 	}
 
 	@Override
 	public Object visit(RegularExpressionInt regularExpressionInt, Object param) {
-		Instructions.out("s" + regularExpressionInt.getType().getPrefix() + "push " + regularExpressionInt.getValue());
+		Instructions.out("ldc " + regularExpressionInt.getValue());
 		return null;
 	}
 
 	@Override
 	public Object visit(RegularExpressionLetter regularExpressionLetter, Object param) {
-		Instructions.out("s" + regularExpressionLetter.getType().getPrefix() + "push " + regularExpressionLetter.getValue());
+		Instructions.out("ldc \"" + regularExpressionLetter.getValue() + "\"");
 		return null;
 	}
 
@@ -56,7 +65,7 @@ public class Value extends AbstractVisitor{
 
 	@Override
 	public Object visit(RegularExpressionReal regularExpressionReal, Object param) {
-		Instructions.out("s" + regularExpressionReal.getType().getPrefix() + "push " + regularExpressionReal.getValue());
+		Instructions.out("ldc " + regularExpressionReal.getValue());
 		return null;
 	}
 
@@ -68,7 +77,7 @@ public class Value extends AbstractVisitor{
 
 	@Override
 	public Object visit(RegularExpressionVariable regularExpressionVariable, Object param) {
-		Instructions.out(regularExpressionVariable.getType().getPrefix() + "load " + regularExpressionVariable.getDirection());
+		Instructions.out(regularExpressionVariable.getType().getPrefix() + "load " + Instructions.vars.get(regularExpressionVariable.getName()));
 		return null;
 	}
 
@@ -79,9 +88,13 @@ public class Value extends AbstractVisitor{
 	}
 
 	@Override
-	public Object visit(ArithmeticExpression arithmeticExpression, Object param) {
-		// TODO Auto-generated method stub
+	public Object visit(ArithmeticExpression arithmeticExpression,
+			Object param) {
+		//System.out.println(arithmeticExpression.toString());
+		Instructions.out(";Line: " + arithmeticExpression.getLine());
+		arithmeticExpression.getLeft().accept(this, null); // load var
+		arithmeticExpression.getRight().accept(this, null); // load var
+		Instructions.out(arithmeticExpression.getType().getPrefix() + Instructions.map.get(String.valueOf(arithmeticExpression.getOperation())));
 		return null;
 	}
-
 }

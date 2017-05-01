@@ -73,4 +73,11 @@ public class TypeSpecialArray extends AbstractType implements TypeSpecial {
 		return getType().getOffset()*getSize();
 	}
 
+
+	@Override
+	public String getPrintType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

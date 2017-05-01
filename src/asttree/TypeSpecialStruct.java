@@ -65,4 +65,10 @@ public class TypeSpecialStruct extends AbstractType implements TypeSpecial {
 		return offset;
 	}
 
+	@Override
+	public String getPrintType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

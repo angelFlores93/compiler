@@ -40,7 +40,7 @@ public class VisitorIdentifier extends AbstractVisitor{
 	}
 	@Override
 	public Object visit(Function function, Object param) {
-		simbolos.reset();
+		//simbolos.reset();
 		simbolos.setAmbito(0);
 		function.getDefinition().accept(this, null);
 		simbolos.setAmbito(1);
@@ -51,7 +51,7 @@ public class VisitorIdentifier extends AbstractVisitor{
 			inst.accept(this, null);
 		}
 		simbolos.printLocal();
-		simbolos.reset();
+		//simbolos.reset();
 		return null;
 	}
 	@Override

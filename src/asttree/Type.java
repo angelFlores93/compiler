@@ -16,4 +16,5 @@ public interface Type extends AST{
 	public Type promotionTo(Type type);
 	public String getPrefix();
 	public int getOffset();
+	public String getPrintType();
 }

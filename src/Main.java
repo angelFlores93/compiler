@@ -77,13 +77,15 @@ public class Main
 				}
 				return;
 			}
-			System.err.println("__________________Calling CodeGeneration Visitor_________________");
-			sintactico.ast.accept(new Instructions(), null);
 			
+			System.err.println("__________________Calling CodeGeneration Visitor_________________");
+			Writer out = new FileWriter(new File("test.j"));
+			sintactico.ast.accept(new Instructions(out), null);
 			
 			
 			IntrospectorModel model=new IntrospectorModel("Program", sintactico.ast);
 			new IntrospectorTree("Introspector", model);
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			
