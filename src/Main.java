@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,9 +80,9 @@ public class Main
 			}
 			
 			System.err.println("__________________Calling CodeGeneration Visitor_________________");
-			Writer out = new FileWriter(new File("test.j"));
-			sintactico.ast.accept(new Instructions(out), null);
-			
+			PrintWriter writer = new PrintWriter("code.j", "UTF-8");
+			sintactico.ast.accept(new Instructions(writer), null);
+			writer.close();
 			
 			IntrospectorModel model=new IntrospectorModel("Program", sintactico.ast);
 			new IntrospectorTree("Introspector", model);

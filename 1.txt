@@ -10,5 +10,7 @@ int sum (){
 }
 // Main program
 void main() { 
-  out sum(); 
+	int res; 
+	res = sum() + 8;
+  out res; 
 }

@@ -35,8 +35,14 @@ ireturn
 .limit stack 5
 .limit locals 100
 
-;Line: 13
+;Line 14
+;Line: 14
 invokestatic compiler.sum()I
+ldc 8
+iadd
+istore 7
+;Line: 15
+iload 7
 getstatic java/lang/System/out Ljava/io/PrintStream;
 swap
 invokevirtual java/io/PrintStream/println(I)V

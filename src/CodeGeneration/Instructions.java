@@ -51,7 +51,7 @@ public class Instructions extends AbstractVisitor{
 	private static PrintWriter outFile; 
 	public static String OUTPUT_NAME = "compiler";
 	
-	public Instructions(Writer outFile){
+	public Instructions(PrintWriter outFile){
 		map.put("+", "add");
 		map.put("-", "sub");
 		map.put("*", "mul");
@@ -63,7 +63,7 @@ public class Instructions extends AbstractVisitor{
 		map.put(">", "if_icmpgt");
 		map.put("!=", "if_icmpne");
 		map.put("==", "if_icmpeq");
-		this.outFile = new PrintWriter(outFile); 
+		this.outFile = outFile; 
 		
 	}
 	public static void out(String text){
