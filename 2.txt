@@ -3,7 +3,7 @@ void main (){
 	a = 1; 
 	while (a < 3){
 		if (a == 2){
-			print(a);
+			out a;
 		}
 		a = a + 1; 
 	}

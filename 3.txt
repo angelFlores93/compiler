@@ -2,7 +2,7 @@ void main (){
 	int a; 
 	a = 0; 
 	int b; 
-	input(b);
-	print(a); 
-	print (b); 
+	in b;
+	out a; 
+	out b; 
 }

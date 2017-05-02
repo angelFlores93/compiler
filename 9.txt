@@ -1,7 +1,7 @@
 void main (){
 	while(a>1){
 		//do nothing
-		print (a); 
+		out a; 
 	}
 	int a; 
 }

@@ -1,48 +1,7 @@
-int i, j, r;
-char c; 
-double temp1; 
-double temp2;
-struct {
-	int campo1, campo2; 
-	double campo3; 
-	char campo4;
-	int [10] a4;
-	double [10][5] a5; 	
-	struct {} a4;
-}s1;
-
-
-int f1 (){
-	int a;
-	if (a >= 4){ 
-	a = 1; 
-		if (a !=  9)
-			return (int)a;
-		else
-			return b;	
+void main (){
+	int a; 
+	a = 0; 
+	if (int a < 9){
+		//do nothing
 	}
-}
-
-int f2(int n, int r){
-	double r;
-	int a, j;
-	return  1; //not recognizing &&
-}
-
-void main(){
-	
-	double [10][5] vl;
-	int i;
-	int j;
-	i = 0; j = 0; 
-	while (i<10){
-		while (j < 5){
-			v1[i][j] = f(i, j) * f2(i,j);
-			c = a+b+c;
-		}
-	}
-	s1.campo1 = 4;
-	s1.campo2 = 6; 
-	s1.campo3 = 5.7;
-	s1.campo4 = 't';
 }
